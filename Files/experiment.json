@@ -1,0 +1,89 @@
+{
+    "Name" : "Testexperiment",
+    "Hosts" : [
+        {
+            "Name" : "Host 1",
+            "Template" :"templateubuntu",
+            "Memory" : "1",
+            "CPU" : "1",
+            "Interfaces" : [
+                {
+                    "Name" : "Interface1",
+                    "Bridge" : "TestBr",
+                    "MTU" : 1500,
+                    "IP" : "10.0.0.1/24",
+                    "Bandwidth" : 10,
+                    "Delay" : 100,
+                    "Jitter" : 0,
+                    "Loss" : 0,
+                    "Tcpdump" : "no",
+                    "Routes" : [ 
+                        {"10.0.0.0/8" : "10.0.0.254"},
+                        {"192.168.0.0/16" : "10.0.0.254"}
+                    ]
+                },
+                {
+                    "Name" : "Interface2",
+                    "Bridge" : "TestBr2",
+                    "Mac" : "00:00:00:01:02:03",
+                    "IP" : "10.0.0.1"
+                }
+            ],
+            "Commands" : [
+                {
+                    "Command" : "echo 'Pre'",
+                    "Time" : "0",
+                    "Background" : true
+                },
+                {
+                    "Command" : "ip a > config.txt",
+                    "Time" : "10",
+                    "Background" : false,
+                    "RepeatUntil" : 30
+                },
+                {
+                    "Command" : "echo 'Post'",
+                    "Time" : "20",
+                    "Background" : true
+                }
+            ]
+        },
+        {
+            "Name" : "Host 2",
+            "Memory" : "1",
+            "CPU" : "1",
+            "Template" :"templateubuntu",
+            "Interfaces" : [
+                {
+                    "Name" : "Interface1",
+                    "Bridge" : "TestBr",
+                    "IP" : "10.0.0.2/24",
+                    "MTU" : 1500,
+                    "Bandwidth" : 10,
+                    "Delay" : 100,
+                    "Jitter" : 0,
+                    "Loss" : 0
+                },
+                {
+                    "Name" : "Interface2",
+                    "Bridge" : "TestBr2",
+                    "Mac" : "00:00:00:01:02:04",
+                    "IP" : null
+                }
+            ],
+            "Commands" : [
+                {
+                    "Command" : "echo 'Pre2' > pre2.txt",
+                    "Time" : "0",
+                    "Background" : true
+                },
+                {
+                    "Command" : "ip a > config.txt",
+                    "Time" : "15",
+                    "Background" : false
+                }
+            ]
+        }
+    ]
+
+}
