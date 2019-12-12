@@ -16,8 +16,8 @@ cd ../Manager
 echo docker build -t vito . -f Dockerfile
 docker build -t vito . -f Dockerfile
 echo mkdir -p /tmp/vito/experiments
-mkdir -p /tmp/vito/experiments
+mkdir -p /vito/experiments
 echo mkdir -p /tmp/vito/results
-mkdir -p /tmp/vito/results
+mkdir -p /vito/results
 echo mkdir -p /usr/testbed
 mkdir -p /usr/testbed

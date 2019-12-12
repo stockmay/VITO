@@ -22,7 +22,6 @@ Vito wird mit `sudo ./initial_setup.sh` installiert.
 
 Während des Setups werden auf dem Host zwei Ordner angelegt
 
-Note: Momentan noch /tmp/vito statt /vito
 * /vito/experiments
 * /vito/results
 

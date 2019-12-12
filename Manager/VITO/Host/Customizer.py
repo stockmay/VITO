@@ -27,11 +27,17 @@ class Customizer:
     def execute_command(self,host,command,*argument):
         #os.system("ssh root@$(sudo virsh net-dhcp-leases default | grep %s | cut -d ' ' -f16 | cut -d '/' -f 1) %s"%(host.virbr_mac,command))
         if host.ip is None:
-            print("ssh root@%s virsh net-dhcp-leases vito | grep %s | cut -d ' ' -f16 | cut -d '/' -f 1"%(self.hostname,host.virbr_mac))
-            host.ip = os.popen("ssh root@%s virsh net-dhcp-leases vito | grep %s | cut -d ' ' -f16 | cut -d '/' -f 1"%(self.hostname,host.virbr_mac)).read().strip()
+            print("ssh root@%s virsh net-dhcp-leases vito | grep %s | cut -d ' ' -f16"%(self.hostname,host.virbr_mac))
+            ip = os.popen("ssh root@%s virsh net-dhcp-leases vito | grep %s"%(self.hostname,host.virbr_mac)).read().strip()
+            for part in ip.split(" "):
+                if "172.12" in part:
+                    host.ip = part.split("/")[0]
         if host.manager_ip is None:
-            print("ssh root@%s virsh net-dhcp-leases vito | grep %s | cut -d ' ' -f16 | cut -d '/' -f 1"%(self.hostname,'manager'))
-            host.manager_ip = os.popen("ssh root@%s virsh net-dhcp-leases vito | grep %s | cut -d ' ' -f16 | cut -d '/' -f 1"%(self.hostname,'manager')).read().strip()
+            print("ssh root@%s virsh net-dhcp-leases vito | grep %s | cut -d ' ' -f16"%(self.hostname,'manager'))
+            ip = os.popen("ssh root@%s virsh net-dhcp-leases vito | grep %s | cut -d ' ' -f16"%(self.hostname,'manager')).read().strip()
+            for part in ip.split(" "):
+                if "172.12" in part:
+                    host.manager_ip = part.split("/")[0]
         if not host.vito_client:
             print("scp /VITO/Client/vito_client.py root@%s:/usr/local/bin/vito_client "%(host.ip))
             os.system("scp /VITO/Client/vito_client.py root@%s:/usr/local/bin/vito_client "%(host.ip))
@@ -55,6 +61,7 @@ class Customizer:
             self.execute_command(host,"interface_properties",interface.name,interface.mtu,interface.bandwidth,interface.delay,interface.jitter,interface.loss)
             self.execute_command(host,'address',interface.name, interface.ip)
             for dest,via in interface.routes.items():
+                print("Route to %s via %s at interface %s"%(dest,via,interface.name))
                 self.execute_command(host,"add_route",interface.name,dest,via)
 
 

@@ -41,6 +41,7 @@ def change_interface_properties(name,mtu,bandwidth,delay=1,jitter=0,loss=0):
     os.system("tc qdisc del dev %s root"%(name))
     os.system("tc qdisc add dev %s handle 1: root netem delay %sms %sms loss %s"%(name,delay,jitter,float(loss)/100.0))
     os.system("tc qdisc add dev %s parent 1: handle 2: tbf rate %skbit buffer 10000 limit 10000"%(name,float(bandwidth)*1000.0))
+    os.system("ip l s %s up"%(name))
 
 def add_route(interface,route,via):
     os.system("ip r add %s via %s dev %s"%(route,via,interface))
@@ -50,15 +51,16 @@ def mount_nfs(manager):
 
 def add_address(name,ip):
     os.system("ip a a %s dev %s"%(ip,name))
+    os.system("ip l s %s up"%(name))
 
 def finish():
     os.system("tar cvjf /mnt/host.tar.bz2 /root/*")
 
 def firewall():
     os.system("iptables -i eth0 -I INPUT -s 172.12.0.0/23 -j ACCEPT")
-    os.system("iptables -i eth0 -I OUTPUT -d 172.12.0.0/23 -j ACCEPT")
-    os.system("iptables -i eth0 -P INPUT -j DROP")
-    os.system("iptables -i eth0 -P OUTPUT -j DRWOP")    
+    os.system("iptables -o eth0 -I OUTPUT -d 172.12.0.0/23 -j ACCEPT")
+    os.system("iptables -i eth0 -A INPUT -j DROP")
+    os.system("iptables -o eth0 -A OUTPUT -j DROP")    
 
 def main():
     function = sys.argv[1]
